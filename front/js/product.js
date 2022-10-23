@@ -7,8 +7,8 @@ let id = params.get("id");
 /**
  * Affichage des items sur la page produit
  */
-const url = "http://localhost:3000/api/products";
-fetch(url + "id")
+const url = 'http://localhost:3000/api/products';
+fetch(url + `/${id}`)
   .then((response) => response.json())
   .then((data) => productDetails(data));
 
@@ -16,26 +16,32 @@ fetch(url + "id")
  * Traitement et insertion des items dans la page produits
  */
 function productDetails(data) {
-  for (let i in data) {
-    //image du produit
-    let item = document.querySelector(".item");
-    item.querySelector(".item__img").UrlSearchParams('imgUrl')
-    item.querySelector(".item__img").alt = data[i].altTxt;
+  //itemImg
+  let itemImg = document.createElement('img');
+  document.querySelector('.item__img').appendChild(itemImg);
+  itemImg.src = data.imageUrl;
+  itemImg.alt = data.altTxt;
 
-    //nom du produit
-    item.getElementById("tittle");
-    item.textContent = data[i].name;
+  //itemTittle
+  let itemTittle = document.querySelector('title');
+  itemTittle.textContent = data.name;
 
-    //prix du produit
-    item.getElementById("price");
-    item.textContent = data[i].price;
+  //itemPrice
+  let itemPrice = document.getElementById('price');
+  itemPrice.textContent = data.price;
 
-    //description du produit
-    item.getElementById("description");
-    item.textContent = data[i].description;
+  //itemDescription
+  let itemDescription = document.getElementById('description');
+  itemDescription.textContent = data.description;
 
-    //option de couleur des produits
-    item.getElementById("colors");
-    let color = new Option((value = data[i].data[colors]));
+  //itemColors
+  for (let colors of data.colors) {
+    let itemColors = document.createElement('option');
+    document.querySelector('#colors').appendChild(itemColors);
+    itemColors.value = colors;
+    itemColors.textContent = colors;
   }
+
+  //fonction OnClick
+  onClick(data) 
 }

@@ -16,7 +16,7 @@ function productsList(data) {
     let section = document.getElementById("items");
     let productLink = document.createElement("a");
     section.appendChild(productLink);
-    productLink.href = `../product.html?id=${data[i]._id}`;
+    productLink.href = `./product.html?id=${data[i]._id}`;
 
     //élément "article"
     let productArticle = document.createElement("article");
