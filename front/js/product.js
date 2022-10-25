@@ -43,5 +43,24 @@ function productDetails(data) {
   }
 
   //fonction OnClick
-  onClick(data) 
+  //récupération des valeurs à mettre dans le local storage
+  let valueItemInCart = {
+    Id: data.id,
+    quantite: 1,
+    color: data.colors
+   }
+  //déclaration de la variable ou sont stocké les keys et values qui sont dans le localStorage
+  let itemSaveInCart = JSON.parse(localStorage.getItem('itemInCart')); 
+  //addEventListener
+  let addToCart = document.getElementById('addToCart')
+  addToCart.addEventListener('click', onclick => {
+    if(itemSaveInCart) {
+      itemSaveInCart.push(valueItemInCart);
+      localStorage.setItem("itemInCart", JSON.stringify(itemSaveInCart));
+    }else{
+      itemSaveInCart = [];
+      itemSaveInCart.push(valueItemInCart);
+      localStorage.setItem("itemInCart", JSON.stringify(itemSaveInCart));
+    }
+  })
 }
