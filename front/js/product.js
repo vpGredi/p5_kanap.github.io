@@ -1,5 +1,5 @@
 /**
- * Faire le lien entre la page produit et la page accueil avec URLSarchParams
+ * Faire le lien entre la page produit et la page accueil via URLSarchParams
  */
 let params = new URL(document.location).searchParams;
 let id = params.get("id");
@@ -7,60 +7,85 @@ let id = params.get("id");
 /**
  * Affichage des items sur la page produit
  */
-const url = 'http://localhost:3000/api/products';
+const url = "http://localhost:3000/api/products";
 fetch(url + `/${id}`)
   .then((response) => response.json())
   .then((data) => productDetails(data));
 
 /**
- * Traitement et insertion des items dans la page produits
+ * Traitement et insertion des items dans la page produit
  */
 function productDetails(data) {
   //itemImg
-  let itemImg = document.createElement('img');
-  document.querySelector('.item__img').appendChild(itemImg);
+  let itemImg = document.createElement("img");
+  document.querySelector(".item__img").appendChild(itemImg);
   itemImg.src = data.imageUrl;
   itemImg.alt = data.altTxt;
 
   //itemTittle
-  let itemTittle = document.querySelector('title');
+  let itemTittle = document.querySelector("title");
   itemTittle.textContent = data.name;
 
   //itemPrice
-  let itemPrice = document.getElementById('price');
+  let itemPrice = document.getElementById("price");
   itemPrice.textContent = data.price;
 
   //itemDescription
-  let itemDescription = document.getElementById('description');
+  let itemDescription = document.getElementById("description");
   itemDescription.textContent = data.description;
 
   //itemColors
   for (let colors of data.colors) {
-    let itemColors = document.createElement('option');
-    document.querySelector('#colors').appendChild(itemColors);
+    let itemColors = document.createElement("option");
+    document.querySelector("#colors").appendChild(itemColors);
     itemColors.value = colors;
     itemColors.textContent = colors;
   }
 
   //fonction OnClick
-  //récupération des valeurs à mettre dans le local storage
-  let valueItemInCart = {
-    Id: data.id,
-    quantite: 1,
-    color: data.colors
-   }
-  //déclaration de la variable ou sont stocké les keys et values qui sont dans le localStorage
-  let itemSaveInCart = JSON.parse(localStorage.getItem('itemInCart')); 
   //addEventListener
-  let addToCart = document.getElementById('addToCart')
-  addToCart.addEventListener('click', onclick => {
-    if(itemSaveInCart) {
-      itemSaveInCart.push(valueItemInCart);
-      localStorage.setItem("itemInCart", JSON.stringify(itemSaveInCart));
-    }else{
-      itemSaveInCart = [];
-      itemSaveInCart.push(valueItemInCart);
-      localStorage.setItem("itemInCart", JSON.stringify(itemSaveInCart));
+  let addToCart = document.getElementById("addToCart");
+  addToCart.addEventListener("click", (onclick) => {
+    let selctQuantity = document.getElementById("quantity").value;
+    let selectColor = document.getElementById("colors").value;
+    if (
+      selctQuantity <= 0 ||
+      selctQuantity > 100 ||
+      selectColor == null ||
+      selectColor == ""
+    ) {
+      alert("Veuillez selectionner une couleur et/ou une quantité correcte");
+      return;
+    } else {
+      let info = {
+        idProduct: id,
+        nom: data.name,
+        image: data.imageUrl,
+        alt: data.altTxt,
+        color: selectColor,
+        quantity: selctQuantity,
+      };
+      //déclaration de la clé
+      let itemSaveInCart = JSON.parse(localStorage.getItem("itemInCart"));
+      console.log(itemSaveInCart);
+      if (itemSaveInCart) {
+        const findStorage = itemSaveInCart.find(
+          (p) => p.idProduct === id && p.color === selectColor
+        );
+        if (findStorage) {
+          let totalItems =
+            parseInt(info.quantity) + parseInt(findStorage.quantity);
+          findStorage.quantity = totalItems;
+          localStorage.setItem("itemInCart", JSON.stringify(itemSaveInCart));
+        } else {
+          itemSaveInCart.push(info);
+          localStorage.setItem("itemInCart", JSON.stringify(itemSaveInCart));
+        }
+      } else {
+        itemSaveInCart = [];
+        itemSaveInCart.push(info);
+        localStorage.setItem("itemInCart", JSON.stringify(itemSaveInCart));
+      }
     }
-  })
+  });
 }
