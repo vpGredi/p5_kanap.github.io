@@ -5,8 +5,11 @@ let itemSaveInCart = JSON.parse(localStorage.getItem("itemInCart"));
 /**
  * Utilisation de la boucle for in pour parcourir l'array & insertion des éléments dans la page produits
  */
-function cartArray() {
-    for(let i in itemSaveInCart) {
+
+cartArray();
+
+function cartArray(itemSaveInCart) {
+    for(let products in itemSaveInCart) {
         //élément article
         let article = document.getElementById('cart__items');
         article.classList.add('cart__item');
@@ -18,8 +21,8 @@ function cartArray() {
         article.appendChild(imgContainer);
         let basketImg = document.createElement('img');
         imgContainer.appendChild(basketImg);
-        basketImg.src = itemSaveInCart[i].image;
-        basketImg.alt = itemSaveInCart[i].alt;
+        basketImg.src = itemSaveInCart[products].image;
+        basketImg.alt = itemSaveInCart[products].alt;
 
         //élément infoContainer
         let infoContainer = document.createElement('div');
@@ -29,9 +32,9 @@ function cartArray() {
         infoDescription.classList.add('cart__item__content__description');
         let basketName = document.createElement('h2');
         infoDescription.appendChild(basketName);
-        basketName.textContent = itemSaveInCart[i].nom;
+        basketName.textContent = itemSaveInCart[products].nom;
         let basketColor = document.createElement('p');
         infoDescription.appendChild(basketColor);
-        basketColor.textContent = itemSaveInCart[i].color;
+        basketColor.textContent = itemSaveInCart[products].color;
     }
 }
