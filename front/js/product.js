@@ -60,10 +60,12 @@ function productDetails(data) {
       let info = {
         idProduct: id,
         nom: data.name,
+        description: data.description,
         image: data.imageUrl,
         alt: data.altTxt,
         color: selectColor,
         quantity: selctQuantity,
+        prix: data.price,
       };
       //déclaration de la clé
       let itemSaveInCart = JSON.parse(localStorage.getItem("itemInCart"));
