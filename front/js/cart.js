@@ -5,10 +5,12 @@ let itemSaveInCart = JSON.parse(localStorage.getItem("itemInCart"));
 /**
  * Utilisation de la boucle for in pour parcourir l'array & insertion des éléments dans la page produits
  */
-
 cartArray();
+totalItemInCart();
+modifyQuantity();
+deleteItem();
 
-function cartArray(itemSaveInCart) {
+function cartArray() {
   if (itemSaveInCart === null) {
     let emptyStorage = document.createElement("article");
     document.querySelector("#cart__item").appendChild(emptyStorage);
@@ -55,7 +57,7 @@ function cartArray(itemSaveInCart) {
       //élément p price
       let divContentDescriptionPrice = document.createElement("p");
       divContentDescription.appendChild(divContentDescriptionPrice);
-      divContentDescriptionPrice.textContent = itemSaveInCart[p].price + "€";
+      divContentDescriptionPrice.textContent = itemSaveInCart[p].prix + "€";
 
       //élément divSettings dans la div contenu
       let divContentSettings = document.createElement("div");
@@ -65,7 +67,9 @@ function cartArray(itemSaveInCart) {
       //élément div settings quantity
       let divContentSettingsQuantity = document.createElement("div");
       divContentSettings.appendChild(divContentSettingsQuantity);
-      divContentSettingsQuantity.classList.add("cart__item__content__settings__quantity");
+      divContentSettingsQuantity.classList.add(
+        "cart__item__content__settings__quantity"
+      );
 
       //élément p dans la div settings quantity
       let divContentSettingsQuantityP = document.createElement("p");
@@ -94,3 +98,70 @@ function cartArray(itemSaveInCart) {
     }
   }
 }
+
+/**
+ * Fonction total items
+ */
+function totalItemInCart() {
+  // quantité
+  let elementQuantity = document.getElementsByClassName("itemQuantity");
+  let totalQuantitySelected = 0;
+  for (let i = 0; i < elementQuantity.length; i++) {
+    totalQuantitySelected += elementQuantity[i].valueAsNumber;
+  }
+  let totalQuantityItem = document.getElementById("totalQuantity");
+  totalQuantityItem.textContent = totalQuantitySelected;
+
+  //prix
+  let totalPrice = 0;
+  for (let i = 0; i < elementQuantity.length; i++) {
+    totalPrice += elementQuantity[i].valueAsNumber * itemSaveInCart[i].prix;
+  }
+  let totalItemPrice = document.getElementById("totalPrice");
+  totalItemPrice.textContent = totalPrice;
+}
+/**
+ * Utilisation de addEventListener de type change pour modifier la quantité ou supprimer un produit du panier
+ */
+function modifyQuantity() {
+  const modifQuantity = document.querySelectorAll(".itemQuantity");
+  for (let i = 0; i < modifQuantity.length; i++) {
+    modifQuantity[i].addEventListener("change",
+    function (event) {
+      event.preventDefault();
+      itemSaveInCart[i].quantity = event.target.value;
+      if (itemSaveInCart[i].quantity < 1 || itemSaveInCart[i].quantity > 100) {
+        alert("Veuillez saisir une quantité comprise entre 1 et 100");
+        location.reload();
+      }else{
+        localStorage.setItem("itemInCart", JSON.stringify(itemSaveInCart));
+        totalItemInCart();
+      }
+    })
+  }
+}
+
+/**
+ * Utilisation de addEventListener pour supprimer un item
+ */
+
+function deleteItem() {
+  const delItem = document.querySelectorAll(".deleteItem");
+  for (let d = 0; d < delItem.lenght; d++) {
+    delItem[d].addEventListener("onclick", (e) => {
+      console.log(itemSaveInCart);
+      e.preventDefault();
+      if (itemSaveInCart){
+        let idDelItem = itemSaveInCart[d].idProduit;
+        let colorDelItem = itemSaveInCart[d].color;
+
+        itemSaveInCart = itemSaveInCart.filter((element) => 
+          element.idProduit !== idDelItem || element.color !== colorDelItem);
+          localStorage.setItem("itemInCart", JSON.stringify(itemSaveInCart));
+      }
+      location.reload();
+    })
+    
+  }
+}
+

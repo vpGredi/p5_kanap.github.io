@@ -46,11 +46,11 @@ function productDetails(data) {
   //addEventListener
   let addToCart = document.getElementById("addToCart");
   addToCart.addEventListener("click", (onclick) => {
-    let selctQuantity = document.getElementById("quantity").value;
+    let selectQuantity = document.getElementById("quantity").value;
     let selectColor = document.getElementById("colors").value;
     if (
-      selctQuantity <= 0 ||
-      selctQuantity > 100 ||
+      selectQuantity <= 0 ||
+      selectQuantity > 100 ||
       selectColor == null ||
       selectColor == ""
     ) {
@@ -64,7 +64,7 @@ function productDetails(data) {
         image: data.imageUrl,
         alt: data.altTxt,
         color: selectColor,
-        quantity: selctQuantity,
+        quantity: selectQuantity,
         prix: data.price,
       };
       //déclaration de la clé
