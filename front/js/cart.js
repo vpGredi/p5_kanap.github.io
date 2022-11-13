@@ -9,6 +9,7 @@ cartArray();
 totalItemInCart();
 modifyQuantity();
 deleteItem();
+checkForm();
 
 function cartArray() {
   if (itemSaveInCart === null) {
@@ -126,18 +127,17 @@ function totalItemInCart() {
 function modifyQuantity() {
   const modifQuantity = document.querySelectorAll(".itemQuantity");
   for (let i = 0; i < modifQuantity.length; i++) {
-    modifQuantity[i].addEventListener("change",
-    function (event) {
+    modifQuantity[i].addEventListener("change", function (event) {
       event.preventDefault();
       itemSaveInCart[i].quantity = event.target.value;
       if (itemSaveInCart[i].quantity < 1 || itemSaveInCart[i].quantity > 100) {
         alert("Veuillez saisir une quantité comprise entre 1 et 100");
         location.reload();
-      }else{
+      } else {
         localStorage.setItem("itemInCart", JSON.stringify(itemSaveInCart));
         totalItemInCart();
       }
-    })
+    });
   }
 }
 
@@ -151,17 +151,53 @@ function deleteItem() {
     delItem[d].addEventListener("onclick", (e) => {
       console.log(itemSaveInCart);
       e.preventDefault();
-      if (itemSaveInCart){
+      if (itemSaveInCart) {
         let idDelItem = itemSaveInCart[d].idProduit;
         let colorDelItem = itemSaveInCart[d].color;
 
-        itemSaveInCart = itemSaveInCart.filter((element) => 
-          element.idProduit !== idDelItem || element.color !== colorDelItem);
-          localStorage.setItem("itemInCart", JSON.stringify(itemSaveInCart));
+        itemSaveInCart = itemSaveInCart.filter(
+          (element) =>
+            element.idProduit !== idDelItem || element.color !== colorDelItem
+        );
+        localStorage.setItem("itemInCart", JSON.stringify(itemSaveInCart));
       }
       location.reload();
-    })
-    
+    });
   }
 }
 
+/**
+ * Formulaire de commande
+ */
+function checkForm() {
+  //récupération des input du form
+  let submit = document.getElementById("order");
+  let inputFirstName = document.getElementById("firstName");
+  let inputLastName = document.getElementById("lastName");
+  let inputAdress = document.getElementById("adress");
+  let inputCity = document.getElementById("city");
+  let inputMail = document.getElementById("email");
+
+  //conditon pour valider ou non le formulaire
+  submit.addEventListener("click", (e) => {
+    if (
+      !inputFirstName.value ||
+      !inputLastName.value ||
+      !inputAdress.value ||
+      !inputCity.value ||
+      !inputCity.value ||
+      !inputMail.value
+    ) {
+      let firstNameErrMessage = document.getElementById("firstNameErrorMsg");
+      firstNameErrMessage.textContent =
+        "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
+    }
+  });
+}
+/**
+ * Boutton de commande
+ */
+let buttonEmptyCart = document.getElementById("order");
+buttonEmptyCart.addEventListener("click", () => {
+  localStorage.clear();
+});
