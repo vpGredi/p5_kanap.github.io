@@ -178,15 +178,21 @@ function checkForm() {
   let inputCity = document.getElementById("city");
   let inputMail = document.getElementById("email");
 
+  //mise en place des RegEx du formulaire
+  let inputFirstNameRegEx = /([A-Za-z])/;
+  let inputLastNameRegEx = /([A-Za-z])/;
+  let inputAdressRegEx = /([A-Za-z])/;
+  let inputCityRegEx = /([A-Za-z])/;
+  let inputMailRegEx = /([A-Za-z])/;
+
   //conditon pour valider ou non le formulaire
   submit.addEventListener("click", (e) => {
     if (
-      !inputFirstName.value ||
-      !inputLastName.value ||
-      !inputAdress.value ||
-      !inputCity.value ||
-      !inputCity.value ||
-      !inputMail.value
+      !inputFirstNameRegEx ||
+      !inputLastNameRegEx||
+      !inputAdressRegEx ||
+      !inputCityRegEx ||
+      !inputMailRegEx
     ) {
       let firstNameErrMessage = document.getElementById("firstNameErrorMsg");
       firstNameErrMessage.textContent =
