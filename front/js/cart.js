@@ -179,27 +179,62 @@ function checkForm() {
   let inputMail = document.getElementById("email");
 
   //mise en place des RegEx du formulaire
-  let inputFirstNameRegEx = /([A-Za-z])/;
-  let inputLastNameRegEx = /([A-Za-z])/;
-  let inputAdressRegEx = /([A-Za-z])/;
-  let inputCityRegEx = /([A-Za-z])/;
-  let inputMailRegEx = /([A-Za-z])/;
+  let inputFirstNameRegEx =
+    /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
+  let inputLastNameRegEx =
+    /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
+  let inputAdressRegEx = /([0-9]*) ?([a-zA-Z,\. ]*) ?([0-9]{5}) ?([a-zA-Z]*)/;
+  let inputCityRegEx = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
+  let inputMailRegEx =
+    /^(([^<>()[]\.,;:s@]+(.[^<>()[]\.,;:s@]+)*)|(.+))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
 
   //conditon pour valider ou non le formulaire
   submit.addEventListener("click", (e) => {
     if (
-      !inputFirstNameRegEx ||
-      !inputLastNameRegEx||
-      !inputAdressRegEx ||
-      !inputCityRegEx ||
-      !inputMailRegEx
+      inputFirstNameRegEx.test(inputFirstName) ||
+      inputLastNameRegEx.test(inputLastName) ||
+      inputAdressRegEx.test(inputAdress) ||
+      inputCityRegEx.test(inputCity) ||
+      inputMailRegEx.test(inputMail)
     ) {
       let firstNameErrMessage = document.getElementById("firstNameErrorMsg");
       firstNameErrMessage.textContent =
         "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
+
+      let lastNameErrMessage = document.getElementById("lastNameErrorMsg");
+      lastNameErrMessage.textContent =
+        "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
+
+      let adressErrMessage = document.getElementById("addressErrorMsg");
+      adressErrMessage.textContent =
+        "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
+
+      let cityErrMessage = document.getElementById("cityErrorMsg");
+      cityErrMessage.textContent =
+        "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
+
+      let mailErrMessage = document.getElementById("emailErrorMsg");
+      mailErrMessage.textContent =
+        "Message d'erreur : Veuillez saisir une adresse mail valide";
+    } else {
+      //Si le formulaire est valide, création de l'objet qui contiendra les produits, et les infos clients
+      let productsBought = [];
+      productsBought.push(itemSaveInCart);
+
+      let order = {
+        contact: {
+          firstName: inputFirstName.value,
+          latsName: inputLastName.value,
+          adress: inputAdress.value,
+          city: inputCity.value,
+          mail: inputMail.value,
+        },
+        products: productsBought,
+      };
     }
   });
 }
+
 /**
  * Boutton de commande
  */
