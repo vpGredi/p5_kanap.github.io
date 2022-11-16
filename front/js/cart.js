@@ -191,11 +191,11 @@ function checkForm() {
   //conditon pour valider ou non le formulaire
   submit.addEventListener("click", (e) => {
     if (
-      inputFirstNameRegEx.test(inputFirstName) ||
-      inputLastNameRegEx.test(inputLastName) ||
-      inputAdressRegEx.test(inputAdress) ||
-      inputCityRegEx.test(inputCity) ||
-      inputMailRegEx.test(inputMail)
+      !inputFirstNameRegEx.test(inputFirstName) ||
+      !inputLastNameRegEx.test(inputLastName) ||
+      !inputAdressRegEx.test(inputAdress) ||
+      !inputCityRegEx.test(inputCity) ||
+      !inputMailRegEx.test(inputMail)
     ) {
       let firstNameErrMessage = document.getElementById("firstNameErrorMsg");
       firstNameErrMessage.textContent =
@@ -242,3 +242,12 @@ let buttonEmptyCart = document.getElementById("order");
 buttonEmptyCart.addEventListener("click", () => {
   localStorage.clear();
 });
+
+
+/** Création de l'en-tête de la requête POST */
+
+let options = {
+  method: "POST",
+  body: JSON.stringify(order),
+  headers: { "Contents-Type": "application/json;charset=utf-8" },
+};
