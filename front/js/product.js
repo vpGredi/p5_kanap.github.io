@@ -69,7 +69,6 @@ function productDetails(data) {
       };
       //déclaration de la clé
       let itemSaveInCart = JSON.parse(localStorage.getItem("itemInCart"));
-      console.log(itemSaveInCart);
       if (itemSaveInCart) {
         const findStorage = itemSaveInCart.find(
           (p) => p.idProduct === id && p.color === selectColor

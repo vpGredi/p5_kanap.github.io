@@ -190,64 +190,60 @@ function checkForm() {
 
   //conditon pour valider ou non le formulaire
   submit.addEventListener("click", (e) => {
-    if (
-      !inputFirstNameRegEx.test(inputFirstName) ||
-      !inputLastNameRegEx.test(inputLastName) ||
-      !inputAdressRegEx.test(inputAdress) ||
-      !inputCityRegEx.test(inputCity) ||
-      !inputMailRegEx.test(inputMail)
-    ) {
+    if (inputFirstNameRegEx.test(inputFirstName) = false) {
       let firstNameErrMessage = document.getElementById("firstNameErrorMsg");
       firstNameErrMessage.textContent =
         "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
-
+    };
+    if (inputLastNameRegEx.test(inputLastName) = false) {
       let lastNameErrMessage = document.getElementById("lastNameErrorMsg");
       lastNameErrMessage.textContent =
         "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
-
+    };
+    if (inputAdressRegEx.test(inputAdress) = false) {
       let adressErrMessage = document.getElementById("addressErrorMsg");
       adressErrMessage.textContent =
         "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
-
+    };
+    if (inputCityRegEx.test(inputCity) = false) {
       let cityErrMessage = document.getElementById("cityErrorMsg");
-      cityErrMessage.textContent =
-        "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
-
+        cityErrMessage.textContent =
+          "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
+    };
+    if (inputMailRegEx.test(inputMail) = false) {
       let mailErrMessage = document.getElementById("emailErrorMsg");
-      mailErrMessage.textContent =
-        "Message d'erreur : Veuillez saisir une adresse mail valide";
+        mailErrMessage.textContent =
+          "Message d'erreur : Veuillez saisir une adresse mail valide";
     } else {
       //Si le formulaire est valide, création de l'objet qui contiendra les produits, et les infos clients
-      let productsBought = [];
-      productsBought.push(itemSaveInCart);
+    let productsBought = [];
+    productsBought.push(itemSaveInCart);
 
-      let order = {
-        contact: {
-          firstName: inputFirstName.value,
-          latsName: inputLastName.value,
-          adress: inputAdress.value,
-          city: inputCity.value,
-          mail: inputMail.value,
-        },
-        products: productsBought,
+    let order = {
+      contact: {
+        firstName: inputFirstName.value,
+        latsName: inputLastName.value,
+        adress: inputAdress.value,
+        city: inputCity.value,
+        mail: inputMail.value,
+      },
+      products: productsBought,
+    };
+      //Création de l'en-tête de la requête POST
+      const options = {
+        method: "POST",
+        body: JSON.stringify(order),
+        headers: { "Contents-Type": "application/json;charset=utf-8" },
       };
-    }
-  });
-}
-
-/**
- * Boutton de commande
- */
-let buttonEmptyCart = document.getElementById("order");
-buttonEmptyCart.addEventListener("click", () => {
-  localStorage.clear();
-});
-
-
-/** Création de l'en-tête de la requête POST */
-
-let options = {
-  method: "POST",
-  body: JSON.stringify(order),
-  headers: { "Contents-Type": "application/json;charset=utf-8" },
-};
+      fetch(`http://localhost:3000/api/products/order`, options)
+        .then((response) => response.json())
+        .then((data) => {
+          const orderId = data.orderId;
+          localStorage.clear;
+          document.location.href = "confirmation.html" + "orderId =" + orderId;
+        })
+        .catch((Error) => {
+          alert("Il y a une erreur :" + Error)
+        });
+    };
+  })};
