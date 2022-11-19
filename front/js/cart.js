@@ -189,46 +189,42 @@ function checkForm() {
     /^(([^<>()[]\.,;:s@]+(.[^<>()[]\.,;:s@]+)*)|(.+))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
 
   //conditon pour valider ou non le formulaire
-  submit.addEventListener("click", (e) => {
-    if (inputFirstNameRegEx.test(inputFirstName) = false) {
+  submit.addEventListener("click", function (onclick) {
+    if (inputFirstNameRegEx.test(inputFirstName) == false) {
       let firstNameErrMessage = document.getElementById("firstNameErrorMsg");
       firstNameErrMessage.textContent =
         "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
-    };
-    if (inputLastNameRegEx.test(inputLastName) = false) {
+    } else if (inputLastNameRegEx.test(inputLastName) == false) {
       let lastNameErrMessage = document.getElementById("lastNameErrorMsg");
       lastNameErrMessage.textContent =
         "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
-    };
-    if (inputAdressRegEx.test(inputAdress) = false) {
+    } else if (inputAdressRegEx.test(inputAdress) == false) {
       let adressErrMessage = document.getElementById("addressErrorMsg");
       adressErrMessage.textContent =
         "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
-    };
-    if (inputCityRegEx.test(inputCity) = false) {
+    } else if (inputCityRegEx.test(inputCity) == false) {
       let cityErrMessage = document.getElementById("cityErrorMsg");
-        cityErrMessage.textContent =
-          "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
-    };
-    if (inputMailRegEx.test(inputMail) = false) {
+      cityErrMessage.textContent =
+        "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
+    } else if (inputMailRegEx.test(inputMail) == false) {
       let mailErrMessage = document.getElementById("emailErrorMsg");
-        mailErrMessage.textContent =
-          "Message d'erreur : Veuillez saisir une adresse mail valide";
+      mailErrMessage.textContent =
+        "Message d'erreur : Veuillez saisir une adresse mail valide";
     } else {
       //Si le formulaire est valide, création de l'objet qui contiendra les produits, et les infos clients
-    let productsBought = [];
-    productsBought.push(itemSaveInCart);
+      let productsBought = [];
+      productsBought.push(itemSaveInCart);
 
-    let order = {
-      contact: {
-        firstName: inputFirstName.value,
-        latsName: inputLastName.value,
-        adress: inputAdress.value,
-        city: inputCity.value,
-        mail: inputMail.value,
-      },
-      products: productsBought,
-    };
+      let order = {
+        contact: {
+          firstName: inputFirstName.value,
+          latsName: inputLastName.value,
+          adress: inputAdress.value,
+          city: inputCity.value,
+          mail: inputMail.value,
+        },
+        products: productsBought,
+      };
       //Création de l'en-tête de la requête POST
       const options = {
         method: "POST",
@@ -240,10 +236,11 @@ function checkForm() {
         .then((data) => {
           const orderId = data.orderId;
           localStorage.clear;
-          document.location.href = "confirmation.html" + "orderId =" + orderId;
+          window.location.href = "confirmation.html" + "orderId =" + orderId;
         })
         .catch((Error) => {
-          alert("Il y a une erreur :" + Error)
+          alert("Il y a une erreur :" + Error);
         });
-    };
-  })};
+    }
+  });
+}
