@@ -9,7 +9,8 @@ cartArray();
 totalItemInCart();
 modifyQuantity();
 deleteItem();
-checkForm();
+//checkForm();
+confirmationOrder();
 
 function cartArray() {
   if (itemSaveInCart === null) {
@@ -148,19 +149,16 @@ function modifyQuantity() {
 function deleteItem() {
   const delItem = document.querySelectorAll(".deleteItem");
   for (let d = 0; d < delItem.lenght; d++) {
-    delItem[d].addEventListener("onclick", (e) => {
-      console.log(itemSaveInCart);
-      e.preventDefault();
-      if (itemSaveInCart) {
-        let idDelItem = itemSaveInCart[d].idProduit;
-        let colorDelItem = itemSaveInCart[d].color;
+    delItem[d].addEventListener("onclick", (event) => {
+      event.preventDefault();
+      let idDelItem = itemSaveInCart[d].idProduit;
+      let colorDelItem = itemSaveInCart[d].color;
 
-        itemSaveInCart = itemSaveInCart.filter(
-          (element) =>
-            element.idProduit !== idDelItem || element.color !== colorDelItem
-        );
-        localStorage.setItem("itemInCart", JSON.stringify(itemSaveInCart));
-      }
+      itemSaveInCart = itemSaveInCart.filter(
+        (element) =>
+          element.idProduit !== idDelItem || element.color !== colorDelItem
+      );
+      localStorage.setItem("itemInCart", JSON.stringify(itemSaveInCart));
       location.reload();
     });
   }
@@ -194,53 +192,71 @@ function checkForm() {
       let firstNameErrMessage = document.getElementById("firstNameErrorMsg");
       firstNameErrMessage.textContent =
         "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
-    } else if (inputLastNameRegEx.test(inputLastName) == false) {
+    };
+    if (inputLastNameRegEx.test(inputLastName) == false) {
       let lastNameErrMessage = document.getElementById("lastNameErrorMsg");
       lastNameErrMessage.textContent =
         "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
-    } else if (inputAdressRegEx.test(inputAdress) == false) {
+    };
+    if (inputAdressRegEx.test(inputAdress) == false) {
       let adressErrMessage = document.getElementById("addressErrorMsg");
       adressErrMessage.textContent =
         "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
-    } else if (inputCityRegEx.test(inputCity) == false) {
+    };
+    if (inputCityRegEx.test(inputCity) == false) {
       let cityErrMessage = document.getElementById("cityErrorMsg");
       cityErrMessage.textContent =
         "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
-    } else if (inputMailRegEx.test(inputMail) == false) {
+    };
+    if (inputMailRegEx.test(inputMail) == false) {
       let mailErrMessage = document.getElementById("emailErrorMsg");
       mailErrMessage.textContent =
         "Message d'erreur : Veuillez saisir une adresse mail valide";
+    };
+  });
+}
+
+function confirmationOrder() {
+  const orderButton = document.getElementById("order");
+  orderButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (!itemSaveInCart) {
+      alert("Il faut au moins un article dans le panier.");
     } else {
       //Si le formulaire est valide, création de l'objet qui contiendra les produits, et les infos clients
-      let productsBought = [];
-      productsBought.push(itemSaveInCart);
+      for (let p = 0; p < itemSaveInCart.lenght; p++) {
+        let productsBought = [];
+        productsBought.push(itemSaveInCart);
 
-      let order = {
-        contact: {
-          firstName: inputFirstName.value,
-          latsName: inputLastName.value,
-          adress: inputAdress.value,
-          city: inputCity.value,
-          mail: inputMail.value,
-        },
-        products: productsBought,
-      };
-      //Création de l'en-tête de la requête POST
-      const options = {
-        method: "POST",
-        body: JSON.stringify(order),
-        headers: { "Contents-Type": "application/json;charset=utf-8" },
-      };
-      fetch(`http://localhost:3000/api/products/order`, options)
-        .then((response) => response.json())
-        .then((data) => {
-          const orderId = data.orderId;
-          localStorage.clear;
-          window.location.href = "confirmation.html" + "orderId =" + orderId;
-        })
-        .catch((Error) => {
-          alert("Il y a une erreur :" + Error);
-        });
+        //objet utilisé pour la commande
+        let order = {
+          contact: {
+            firstName: inputFirstName.value,
+            latsName: inputLastName.value,
+            adress: inputAdress.value,
+            city: inputCity.value,
+            mail: inputMail.value,
+          },
+          products: productsBought,
+        };
+
+        //Création de l'en-tête de la requête POST
+        const options = {
+          method: "POST",
+          body: JSON.stringify(order),
+          headers: { "Contents-Type": "application/json;charset=utf-8" },
+        };
+        fetch(`http://localhost:3000/api/products/order`, options)
+          .then((response) => response.json())
+          .then((data) => {
+            const orderId = data.orderId;
+            localStorage.clear;
+            window.location.href = "confirmation.html" + "orderId =" + orderId;
+          })
+          .catch((Error) => {
+            alert("Il y a une erreur :" + Error);
+          });
+      }
     }
   });
 }
