@@ -5,5 +5,5 @@ let orderParams = new URL(document.location).searchParams;
 let orderNumber = orderParams.get("orderId");
 
 let orderValue = document.getElementById("orderId");
-orderValue.textContent = orderNumber;
+orderValue.innerHTML = orderNumber + "</br> Merci pour votre commande.";
 localStorage.clear();

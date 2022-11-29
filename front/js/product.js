@@ -67,7 +67,7 @@ function productDetails(data) {
         quantity: selectQuantity,
         prix: data.price,
       };
-      //déclaration de la clé
+      //key déclaration
       let itemSaveInCart = JSON.parse(localStorage.getItem("itemInCart"));
       if (itemSaveInCart) {
         const findStorage = itemSaveInCart.find(
