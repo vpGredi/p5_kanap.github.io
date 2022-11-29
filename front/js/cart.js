@@ -8,7 +8,7 @@ let itemSaveInCart = JSON.parse(localStorage.getItem("itemInCart"));
 cartArray();
 totalItemInCart();
 modifyQuantity();
-deleteItem();
+//deleteItem();
 //checkForm();
 confirmationOrder();
 
@@ -169,7 +169,6 @@ function deleteItem() {
  */
 function checkForm() {
   //récupération des input du form
-  let submit = document.getElementById("order");
   let inputFirstName = document.getElementById("firstName");
   let inputLastName = document.getElementById("lastName");
   let inputAdress = document.getElementById("adress");
@@ -177,44 +176,47 @@ function checkForm() {
   let inputMail = document.getElementById("email");
 
   //mise en place des RegEx du formulaire
-  let inputFirstNameRegEx =
-    /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
-  let inputLastNameRegEx =
-    /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
+  let inputFirstNameRegEx = new RegExp("^[a-zA-Z, .'-]+$")
+    ;
+  let inputLastNameRegEx = new RegExp("/^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/")
+    ;
   let inputAdressRegEx = /([0-9]*) ?([a-zA-Z,\. ]*) ?([0-9]{5}) ?([a-zA-Z]*)/;
   let inputCityRegEx = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
   let inputMailRegEx =
     /^(([^<>()[]\.,;:s@]+(.[^<>()[]\.,;:s@]+)*)|(.+))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
 
   //conditon pour valider ou non le formulaire
-  submit.addEventListener("click", function (onclick) {
-    if (inputFirstNameRegEx.test(inputFirstName) == false) {
+ 
+    if (inputFirstNameRegEx.test(inputFirstName)) {
       let firstNameErrMessage = document.getElementById("firstNameErrorMsg");
       firstNameErrMessage.textContent =
         "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
+        
     };
-    if (inputLastNameRegEx.test(inputLastName) == false) {
+    if (inputLastNameRegEx.test(inputLastName)) {
       let lastNameErrMessage = document.getElementById("lastNameErrorMsg");
       lastNameErrMessage.textContent =
         "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
+        console.log(inputLastNameRegEx.test(inputLastName));
     };
-    if (inputAdressRegEx.test(inputAdress) == false) {
+    if (inputAdressRegEx.test(inputAdress)) {
       let adressErrMessage = document.getElementById("addressErrorMsg");
       adressErrMessage.textContent =
         "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
+        console.log(inputAdressRegEx.test(inputAdress));
     };
-    if (inputCityRegEx.test(inputCity) == false) {
+    if (inputCityRegEx.test(inputCity)) {
       let cityErrMessage = document.getElementById("cityErrorMsg");
       cityErrMessage.textContent =
         "Message d'erreur : Le champ est incomplet ou la valeur saisie n'est pas valide";
     };
-    if (inputMailRegEx.test(inputMail) == false) {
+    if (inputMailRegEx.test(inputMail)) {
       let mailErrMessage = document.getElementById("emailErrorMsg");
       mailErrMessage.textContent =
         "Message d'erreur : Veuillez saisir une adresse mail valide";
     };
-  });
-}
+  };
+
 
 function confirmationOrder() {
   const orderButton = document.getElementById("order");
@@ -224,39 +226,38 @@ function confirmationOrder() {
       alert("Il faut au moins un article dans le panier.");
     } else {
       //Si le formulaire est valide, création de l'objet qui contiendra les produits, et les infos clients
+      let productsBought = [];
       for (let p = 0; p < itemSaveInCart.lenght; p++) {
-        let productsBought = [];
+        
         productsBought.push(itemSaveInCart);
-
-        //objet utilisé pour la commande
-        let order = {
-          contact: {
-            firstName: inputFirstName.value,
-            latsName: inputLastName.value,
-            adress: inputAdress.value,
-            city: inputCity.value,
-            mail: inputMail.value,
-          },
-          products: productsBought,
-        };
-
-        //Création de l'en-tête de la requête POST
-        const options = {
-          method: "POST",
-          body: JSON.stringify(order),
-          headers: { "Contents-Type": "application/json;charset=utf-8" },
-        };
-        fetch(`http://localhost:3000/api/products/order`, options)
-          .then((response) => response.json())
-          .then((data) => {
-            const orderId = data.orderId;
-            localStorage.clear;
-            window.location.href = "confirmation.html" + "orderId =" + orderId;
-          })
-          .catch((Error) => {
-            alert("Il y a une erreur :" + Error);
-          });
       }
+              //objet utilisé pour la commande
+              let order = {
+                contact: {
+                  firstName: inputFirstName.value,
+                  latsName: inputLastName.value,
+                  adress: inputAdress.value,
+                  city: inputCity.value,
+                  mail: inputMail.value,
+                },
+                products: productsBought,
+              };
+      
+              //Création de l'en-tête de la requête POST
+              const options = {
+                method: "POST",
+                body: JSON.stringify(order),
+                headers: { "Contents-Type": "application/json;charset=utf-8" },
+              };
+              fetch(`http://localhost:3000/api/products/order`, options)
+                .then((response) => response.json())
+                .then((data) => {
+                  const orderId = data.orderId;
+                  window.location.href = "confirmation.html" + "orderId =" + orderId;
+                })
+                .catch((Error) => {
+                  alert("Il y a une erreur :" + Error);
+                });
     }
   });
 }
