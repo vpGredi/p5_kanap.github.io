@@ -42,8 +42,7 @@ function productDetails(data) {
     itemColors.textContent = colors;
   }
 
-  //fonction OnClick
-  //addEventListener
+  //fonction OnClick - addEventListener
   let addToCart = document.getElementById("addToCart");
   addToCart.addEventListener("click", (onclick) => {
     let selectQuantity = document.getElementById("quantity").value;
@@ -65,7 +64,6 @@ function productDetails(data) {
         alt: data.altTxt,
         color: selectColor,
         quantity: selectQuantity,
-        prix: data.price,
       };
       //key déclaration
       let itemSaveInCart = JSON.parse(localStorage.getItem("itemInCart"));
